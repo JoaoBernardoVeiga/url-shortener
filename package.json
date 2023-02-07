@@ -4,6 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "day:1": "node day1/solution.js",
+    "day:2": "node day2/solution.js",
+    "day:3": "node day3/solution.js",
+    "day:6": "node day6/solution.js",
+    "day:7": "node day7/solution.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
