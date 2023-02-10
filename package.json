@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/CaptainJRoy/CodingExercises/issues"
   },
-  "homepage": "https://github.com/CaptainJRoy/CodingExercises#readme"
+  "homepage": "https://github.com/CaptainJRoy/CodingExercises#readme",
+  "dependencies": {
+    "fs": "^0.0.1-security"
+  }
 }
