@@ -12,10 +12,9 @@ function solution1() {
             arrayBinary.unshift(aNumber % 2);
             aNumber = Math.floor(aNumber / 2);
         }
-        numberBytes = arrayBinary.length;
-        window.prompt(`O número de bytes é ${numberBytes}`);
-        }
-
+        numberBytes = arrayBinary.length;    
+    }
+    window.confirm(`O número de bytes é ${numberBytes}`);
 }
 
 
@@ -32,7 +31,7 @@ function solution2() {
             }
             aNumber = Math.floor(aNumber / 2);
         }
-        window.prompt(`O número de 1s é ${numberBytes}`);
+        window.confirm(`O número de 1s é ${numberBytes}`);
 
 }
 
