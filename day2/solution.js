@@ -32,7 +32,7 @@ function solution2() {
             }
             aNumber = Math.floor(aNumber / 2);
         }
-        window.prompt(`O número de 1s é ${numberBytes}`);
+        window.prompt(`O número de 1s na representacao binária é ${numberBytes}`);
 
 }
 
