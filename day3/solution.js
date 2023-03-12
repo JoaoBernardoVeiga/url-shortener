@@ -3,11 +3,23 @@ let intN = 0;
 intN = Number(window.prompt("Insira um número para calcular o seu fatorial"));
 
 function solution(intN) {
-    let counter = intN;
+    let counter = 0;
     let arrayN = [];
     let arrayNMinus1 = [];
     let arrayfactorial = [];
     
+    let suficientlySmall = 1;
+
+    if (suficientlySmall){
+      let factorial = intN;
+      for(counter = intN -1; counter > 1; counter--){
+        factorial *= counter;
+      }
+      let factorialLast2 = factorial % 100
+      window.confirm(`O fatorial de ${intN} é ${factorial} e os seus dois últimos dígitos são ${factorialLast2}`);
+    }
+
+
     // while(counter >= 2){
     //     let tempCounter = counter;
         
@@ -74,4 +86,4 @@ function getArrayMinus1(arrayN) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // Execute exercise functions
-solution()
+solution(intN);
