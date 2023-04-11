@@ -13,10 +13,10 @@ function solution1(stringA) {
   while (counter <= stringA.length - 1) {
     charToVerify = stringA[counter].normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     if (charToVerify != 'a' &&
-      charToVerify != 'e' &&
-      charToVerify != 'i' &&
-      charToVerify != 'o' &&
-      charToVerify != 'u') {
+        charToVerify != 'e' &&
+        charToVerify != 'i' &&
+        charToVerify != 'o' &&
+        charToVerify != 'u') {
       stringNoVowels += stringA[counter];
     }
     counter++;

@@ -7,16 +7,12 @@ let stringC = window.prompt(`Insira a string para verificar o caracter mais freq
 
 function solution1(stringA, stringB) {
   let stringAChars = "";
-  let counterChars = 0;
-  let counterOneStringA = 0;
-  let counterTwoStringA = 0;
-  let counterStringB = 0;
   let skip = [];
   let flagPresent = false;
 
   //generates new string with unrepeated chars and generates array with position of repeated chars of stringA
-  for (counterOneStringA = 0; counterOneStringA < stringA.length; counterOneStringA++) {
-    for (counterTwoStringA = counterOneStringA + 1; counterTwoStringA < stringA.length; counterTwoStringA++) {
+  for (let counterOneStringA = 0; counterOneStringA < stringA.length; counterOneStringA++) {
+    for (let counterTwoStringA = counterOneStringA + 1; counterTwoStringA < stringA.length; counterTwoStringA++) {
       if (stringA[counterOneStringA] == stringA[counterTwoStringA] && !skip.includes(counterOneStringA)) {
         skip.push(counterTwoStringA);
       }
@@ -25,19 +21,20 @@ function solution1(stringA, stringB) {
       stringAChars += stringA[counterOneStringA];
     }
   }
+
   //finds if unrepeated chars are present in string B
-  for (counterChars = 0; counterChars < stringAChars.length; counterChars++) {
+  for (let counterChars = 0; counterChars < stringAChars.length; counterChars++) {
     flagPresent = false;
-    for (counterStringB = 0; counterStringB < stringB.length; counterStringB++) {
+    for (let counterStringB = 0; counterStringB < stringB.length; counterStringB++) {
       if (stringAChars[counterChars] == stringB[counterStringB]) {
         flagPresent = true;
       } 
-      if (counterStringB == stringB.length - 1 && flagPresent == false) {
+      if (counterStringB == stringB.length - 1 && !flagPresent) {
         return window.confirm(`Pelo menos 1 caracter da string A não está presente na string B: o caracter '${stringAChars[counterChars]}'`);
       }
     }
   }
-  return window.confirm(`Todos os caracteres da string A estão presentes na string B`);
+  return window.confirm('Todos os caracteres da string A estão presentes na string B');
 }
 
 
