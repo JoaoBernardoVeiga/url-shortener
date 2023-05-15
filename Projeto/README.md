@@ -10,3 +10,10 @@
 
 - [x] Adiciona um linter (eslint) ao projeto. Adiciona também um script para correr o linter ao ficheiro _package.json_
 - [x] Cria um ficheiro [_docker-compose_](https://geshan.com.np/blog/2021/12/docker-postgres/) na pasta _docker_ que defina 1 container de postgres na versão __latest__. Depois de encontrares a mais recente, fixa-a.
+
+
+
+## Notes:
+1. docker-compose up - Run containers
+2. docker-compose down - Clean containers
+3. DBeaver for accessing databases
