@@ -18,32 +18,22 @@ app.listen(port, function () {
     console.log(`Server started on port ${port}`);
 });
 
-app.get('/api/hello_world', function (req, res) {
+app.get('/api/hello_world', function (req: Request, res: Response) {
     res.status(200).send("Adeus");
 });
 
-app.get('/db/select/:fields/from/:table', (req: Request, res: Response) => {
+app.get('/db/select/:fields/from/:table', async (req: Request, res: Response) => {
 
     const fields: string[] = req.params.fields.split(',');
     const table: string = req.params.table;
     
-    const client = new pg.Client(dbConnectionFields);
-    
-    client.connect()
-    .then(() => {
-        console.log('Connected to the database');
-    })
-    .catch((err) => {
-        console.error('Failed to connect to the database', err);
-    });
+    const pool = new pg.Pool(dbConnectionFields);
     
     const query = `SELECT ${fields.join(',')} FROM ${table}`;
-    console.log(query);
-    client.query(query)
+    await pool.query(query)
         .then((result) => {
             const rows = result.rows;
             res.status(200).json(rows);
-            client.end();
         })
         .catch((err) => {
             console.error('Failed to execute the database query', err);
