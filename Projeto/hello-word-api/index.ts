@@ -23,17 +23,17 @@ app.listen(port, () => {
     console.log(`Server started on port ${port}`);
 });
 
-app.get('/api/hello_world', (req, res) => {
+app.get('/api/hello_world', (req: Request, res: Response) => {
     res.status(200).send("Adeus");
 });
 
 // Route handler for GET /api/sign_up
-app.get('/api/sign_up', (req, res) => {
-    res.sendFile(__dirname + "/sign_up.html");
+app.get('/api/sign_up', (req: Request, res: Response) => {
+    res.sendFile(__dirname + "/public/html/sign_up.html");
 });
 
 // POST endpoint for /api/sign_up
-app.post('/api/sign_up', async (req, res) => {
+app.post('/api/sign_up', async (req: Request, res: Response) => {
     try {
         const { name, email, password, confirmPassword } = req.body;
         
@@ -49,23 +49,13 @@ app.post('/api/sign_up', async (req, res) => {
         // Hash password using MD5
         const hashedPassword = md5(password);
         
-        const client = new pg.Client(dbConnectionFields);
-        
-        client.connect()
-            .then(() => {
-                console.log('Connected to the database');
-            })
-            .catch((err) => {
-                console.error('Failed to connect to the database', err);
-            });
-        
+        const pool = new pg.Pool(dbConnectionFields);
+                
         // Insert new user into the database
-        await client.query(
+        await pool.query(
             'INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3)',
             [name, email, hashedPassword]
         );
-
-        await client.end();
 
         return res.status(201).json({ message: 'User created successfully' });
     } catch (error) {
