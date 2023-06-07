@@ -104,5 +104,5 @@ dist
 # TernJS port file
 .tern-port
 
-# Prevent .js files to be commited to project
-*.js
+# Prevent .js build file(s) to be commited to project
+*/hello-world-api/index.js
