@@ -103,3 +103,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Prevent .js build file(s) to be commited to project
+index.js

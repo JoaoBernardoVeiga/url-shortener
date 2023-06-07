@@ -1,9 +1,14 @@
 import express, { Express, Request, Response } from 'express';
 import pg from 'pg';
+import bodyParser from 'body-parser';
+import md5 from 'md5';
+
 
 const app: Express = express();
 const port: number = 3000;
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
 
 const dbConnectionFields = {
@@ -14,29 +19,47 @@ const dbConnectionFields = {
     password: 'postgres'
 }
 
-app.listen(port, function () {
+app.listen(port, () => {
     console.log(`Server started on port ${port}`);
 });
 
-app.get('/api/hello_world', function (req: Request, res: Response) {
+app.get('/api/hello_world', (req: Request, res: Response) => {
     res.status(200).send("Adeus");
 });
 
-app.get('/db/select/:fields/from/:table', async (req: Request, res: Response) => {
+// Route handler for GET /api/sign_up
+app.get('/api/sign_up', (req: Request, res: Response) => {
+    res.sendFile(__dirname + "/public/html/sign_up.html");
+});
 
-    const fields: string[] = req.params.fields.split(',');
-    const table: string = req.params.table;
-    
-    const pool = new pg.Pool(dbConnectionFields);
-    
-    const query = `SELECT ${fields.join(',')} FROM ${table}`;
-    await pool.query(query)
-        .then((result) => {
-            const rows = result.rows;
-            res.status(200).json(rows);
-        })
-        .catch((err) => {
-            console.error('Failed to execute the database query', err);
-            res.status(500).json({ error: 'Internal Server Error' });
-        });
+// POST endpoint for /api/sign_up
+app.post('/api/sign_up', async (req: Request, res: Response) => {
+    try {
+        const { name, email, password, confirmPassword } = req.body;
+        
+        // Input validation
+        if (!name || !email || !password || !confirmPassword) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
+        
+        if (password !== confirmPassword) {
+            return res.status(400).json({ error: 'Passwords do not match' });
+        }
+        
+        // Hash password using MD5
+        const hashedPassword = md5(password);
+        
+        const pool = new pg.Pool(dbConnectionFields);
+                
+        // Insert new user into the database
+        await pool.query(
+            'INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3)',
+            [name, email, hashedPassword]
+        );
+
+        return res.status(201).json({ message: 'User created successfully' });
+    } catch (error) {
+        console.error('Error creating user:', error);
+        return res.status(500).json({ error: 'An unexpected error occurred' });
+    }
 });
