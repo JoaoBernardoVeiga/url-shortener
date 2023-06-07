@@ -105,4 +105,4 @@ dist
 .tern-port
 
 # Prevent .js build file(s) to be commited to project
-*/hello-world-api/index.js
+index.js
