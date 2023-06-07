@@ -3,9 +3,9 @@ import pg from 'pg';
 import bodyParser from 'body-parser';
 import md5 from 'md5';
 
+
 const app: Express = express();
 const port: number = 3000;
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
