@@ -91,10 +91,10 @@ app.post('/shortener', async (req: Request, res: Response) => {
         const { link } = req.body;
         
         // Generate a random short id
-        const shortId = generateShortId();
-        
+        const shortId = generateShortId(link);
         // Insert the entry into the "entries" table
-        await pool.query('INSERT INTO entries (creation_date, short_id, original_url) VALUES (current_timestamp, $1, $2)', [shortId, link]);
+        await pool.query('INSERT INTO entries (creation_date, short_id, original_url) VALUES (current_timestamp, $1, $2) ON CONFLICT (short_id) DO UPDATE SET creation_date = now(), original_url = $3'
+        , [shortId, link, link]);
         
         // Construct the short URL
         const shortUrl = `${req.protocol}://${req.get('host')}/s/${shortId}`;
@@ -108,13 +108,9 @@ app.post('/shortener', async (req: Request, res: Response) => {
 });
 
 // Helper function to generate a random short id
-function generateShortId(): string {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let shortId = '';
-    for (let i = 0; i < 8; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        shortId += characters.charAt(randomIndex);
-    }
+function generateShortId(link : string ): string {
+    link = md5(link);
+    const shortId = link.substring(0, 8);
     return shortId;
 }
 
