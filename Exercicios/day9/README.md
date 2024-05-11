@@ -1,0 +1,3 @@
+1 - Defina uma função que recebe (string a) que calcula o comprimento da maior sub-string com caracteres iguais. Por exemplo, f("aabcccaac") deve dar como resultado 3, correspondendo á repetição "ccc".
+
+2 - Defina uma função que revebe (string b) que calcula o comprimento da maior sub-string com caracteres diferentes. Por exemplo, f("aabcccaac") deve dar como resultado 3, correspondendo á string "abc".
