@@ -1,3 +1,0 @@
-1 - Defina uma funçaão que recebe uma string como argumento e retira todas as vogais existentes.
-
-2 - Defina uma função (string t, int n) que dado um texto _t_ com várias palavras (as palavras estão separadas em _t_ por um ou mais espaços) e um inteiro _n_, trunca todas as palavras de forma a terem no máximo _n_ caracteres. Por exemplo, se a string _t_ contiver "liberdade, igualdade e fraternidade", a invocação da funcao (t, 4) deve fazer com que esta retorne a string "libe igua e frat".
