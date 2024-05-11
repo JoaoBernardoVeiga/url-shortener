@@ -11,12 +11,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-const pool = new pg.Pool({ 
+const pool = new pg.Pool({
     host: process.env.DB_HOST,
     port: parseInt(process.env.DB_PORT || ""),
     database: process.env.DB_DATABASE,
     user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD, 
+    password: process.env.DB_PASSWORD,
 });
 
 
@@ -38,11 +38,18 @@ app.get("/shortener", (req: Request, res: Response) => {
 app.get('/s/:shortUrl', async (req: Request, res: Response) => {
     try {
         const { shortUrl } = req.params;
-        
+
         // Retrieve the original URL from the "entries" table using the short id
-        const result = await pool.query('SELECT original_url FROM entries WHERE short_id = $1', [shortUrl]);
-        
+        const result = await pool.query('SELECT original_url, creation_date FROM entries WHERE short_id = $1', [shortUrl]);
+
         if (result.rowCount > 0) {
+
+            const creationDate = (new Date(result.rows[0].creation_date)).valueOf() / 1000;
+            const now = ((new Date()).valueOf() / 1000) - (60 * 60);
+            if (now - creationDate > 60) {
+                res.status(410).send('Link has expired.')
+            }
+
             const originalUrl = result.rows[0].original_url;
             res.redirect(originalUrl);
         } else {
@@ -58,19 +65,19 @@ app.get('/s/:shortUrl', async (req: Request, res: Response) => {
 app.post('/api/sign_up', async (req: Request, res: Response) => {
     try {
         const { name, email, password, confirmPassword } = req.body;
-        
+
         // Input validation
         if (!name || !email || !password || !confirmPassword) {
             return res.status(400).json({ error: 'All fields are required' });
         }
-        
+
         if (password !== confirmPassword) {
             return res.status(400).json({ error: 'Passwords do not match' });
         }
-        
+
         // Hash password using MD5
         const hashedPassword: string = md5(password);
-        
+
         // Insert new user into the database
         await pool.query(
             'INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3)',
@@ -89,16 +96,16 @@ app.post('/api/sign_up', async (req: Request, res: Response) => {
 app.post('/shortener', async (req: Request, res: Response) => {
     try {
         const { link } = req.body;
-        
+
         // Generate a random short id
         const shortId = generateShortId(link);
         // Insert the entry into the "entries" table
         await pool.query('INSERT INTO entries (creation_date, short_id, original_url) VALUES (current_timestamp, $1, $2) ON CONFLICT (short_id) DO UPDATE SET creation_date = now(), original_url = $3'
-        , [shortId, link, link]);
-        
+            , [shortId, link, link]);
+
         // Construct the short URL
         const shortUrl = `${req.protocol}://${req.get('host')}/s/${shortId}`;
-        
+
         // Return the short URL to the user
         res.send(shortUrl);
     } catch (error) {
@@ -108,7 +115,7 @@ app.post('/shortener', async (req: Request, res: Response) => {
 });
 
 // Helper function to generate a random short id
-function generateShortId(link : string ): string {
+function generateShortId(link: string): string {
     link = md5(link);
     const shortId = link.substring(0, 8);
     return shortId;
