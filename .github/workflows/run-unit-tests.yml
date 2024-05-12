@@ -1,0 +1,15 @@
+name: Run Unit Tests
+on:
+    pull_request:
+
+jobs:
+    run_jest_tests:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out code
+              uses: actions/checkout@v4
+
+            - name: Run Tests
+              run: |
+                  npm ci
+                  npm run test

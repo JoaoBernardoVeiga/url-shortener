@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express, { Express, Request, Response } from 'express';
+import { generateShortId } from './src/utils/generateShortId';
 import pg from 'pg';
 import bodyParser from 'body-parser';
 import md5 from 'md5';
@@ -114,12 +115,23 @@ app.post('/shortener', async (req: Request, res: Response) => {
     }
 });
 
-// Helper function to generate a random short id
-function generateShortId(link: string): string {
-    link = md5(link);
-    const shortId = link.substring(0, 8);
-    return shortId;
-}
+app.get('/db/select/:fields/from/:table', async (req: Request, res: Response) => {
+
+    const fields: string[] = req.params.fields.split(',');
+    const table: string = req.params.table;
+
+    const query = `SELECT ${fields.join(',')} FROM ${table}`;
+    await pool.query(query)
+        .then((result) => {
+            const rows = result.rows;
+            res.status(200).json(rows);
+        })
+        .catch((err) => {
+            console.error('Failed to execute the database query', err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        });
+});
+
 
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
