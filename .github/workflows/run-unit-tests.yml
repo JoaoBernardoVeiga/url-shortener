@@ -1,6 +1,9 @@
 name: Run Unit Tests
 on:
     pull_request:
+    push:
+        branches:
+            - master
 
 jobs:
     run_jest_tests:
